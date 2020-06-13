@@ -14,6 +14,7 @@ func Test_loadConfiguration(t *testing.T) {
 		apiPlatformClientSecret: "test4",
 		apiPlatformUser:         "test5",
 		apiPlatformUserPassword: "test6",
+		apiPlatformScope:        "test7",
 	}
 	config := CoreConfiguration{}
 
@@ -37,11 +38,11 @@ func Test_Configuration(t *testing.T) {
 		expectedOutcome map[string]string
 	}{
 		{
-			fileContent:     internalConfiguration{APIPlatformClientID: "1", APIPlatformHost: "2", APIPlatformClientSecret: "3", APIPlatformUserPassword: "4", IDCSHost: "5", APIPlatformUser: "6"},
+			fileContent:     internalConfiguration{APIPlatformClientID: "1", APIPlatformHost: "2", APIPlatformClientSecret: "3", APIPlatformUserPassword: "4", IDCSHost: "5", APIPlatformUser: "6", APIPlatformScope: "7"},
 			setEnv:          func() {},
-			expectedOutcome: map[string]string{"APIPlatformClientID": "1", "APIPlatformHost": "2", "APIPlatformClientSecret": "3", "APIPlatformUserPassword": "4", "IDCSHost": "5", "APIPlatformUser": "6"},
+			expectedOutcome: map[string]string{"APIPlatformClientID": "1", "APIPlatformHost": "2", "APIPlatformClientSecret": "3", "APIPlatformUserPassword": "4", "IDCSHost": "5", "APIPlatformUser": "6", "APIPlatformScope": "7"},
 		}, {
-			fileContent: internalConfiguration{APIPlatformClientID: "$t1", APIPlatformHost: "$t2", APIPlatformClientSecret: "$t3", APIPlatformUserPassword: "$t4", IDCSHost: "$t5", APIPlatformUser: "$t6"},
+			fileContent: internalConfiguration{APIPlatformClientID: "$t1", APIPlatformHost: "$t2", APIPlatformClientSecret: "$t3", APIPlatformUserPassword: "$t4", IDCSHost: "$t5", APIPlatformUser: "$t6", APIPlatformScope: "$t7"},
 			setEnv: func() {
 				os.Setenv("t1", "test1")
 				os.Setenv("t2", "test2")
@@ -49,8 +50,9 @@ func Test_Configuration(t *testing.T) {
 				os.Setenv("t4", "test4")
 				os.Setenv("t5", "test5")
 				os.Setenv("t6", "test6")
+				os.Setenv("t7", "test7")
 			},
-			expectedOutcome: map[string]string{"APIPlatformClientID": "test1", "APIPlatformHost": "test2", "APIPlatformClientSecret": "test3", "APIPlatformUserPassword": "test4", "IDCSHost": "test5", "APIPlatformUser": "test6"},
+			expectedOutcome: map[string]string{"APIPlatformClientID": "test1", "APIPlatformHost": "test2", "APIPlatformClientSecret": "test3", "APIPlatformUserPassword": "test4", "IDCSHost": "test5", "APIPlatformUser": "test6", "APIPlatformScope": "test7"},
 		}}
 
 	for _, test := range tests {
@@ -64,6 +66,8 @@ func Test_Configuration(t *testing.T) {
 			config.GetAPIPlatformHost() != test.expectedOutcome["APIPlatformHost"] ||
 			config.GetAPIPlatformClientSecret() != test.expectedOutcome["APIPlatformClientSecret"] ||
 			config.GetAPIPlatformUserPassword() != test.expectedOutcome["APIPlatformUserPassword"] ||
+			config.GetAPIPlatformUser() != test.expectedOutcome["APIPlatformUser"] ||
+			config.GetAPIPlatformScope() != test.expectedOutcome["APIPlatformScope"] ||
 			config.GetIDCSHost() != test.expectedOutcome["IDCSHost"] {
 			t.Errorf("Test failed: %+v", test)
 		}

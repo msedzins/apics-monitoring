@@ -14,6 +14,15 @@ type CoreConfiguration struct {
 	apiPlatformClientSecret string
 	apiPlatformUser         string
 	apiPlatformUserPassword string
+	apiPlatformScope        string
+}
+
+// GetAPIPlatformScope returns value from configuration file or env. variable.
+func (conf *CoreConfiguration) GetAPIPlatformScope() string {
+	if strings.HasPrefix(conf.apiPlatformScope, "$") {
+		return os.Getenv(conf.apiPlatformScope[1:])
+	}
+	return conf.apiPlatformScope
 }
 
 // GetAPIPlatformClientID returns value from configuration file or env. variable.
@@ -92,6 +101,7 @@ type internalConfiguration struct {
 	APIPlatformClientSecret string
 	APIPlatformUser         string
 	APIPlatformUserPassword string
+	APIPlatformScope        string
 }
 
 //copies data from temporary structure to CoreConfiguration
@@ -103,4 +113,5 @@ func (config *internalConfiguration) setConfiguration(newConf *CoreConfiguration
 	newConf.apiPlatformClientSecret = config.APIPlatformClientSecret
 	newConf.apiPlatformUser = config.APIPlatformUser
 	newConf.apiPlatformUserPassword = config.APIPlatformUserPassword
+	newConf.apiPlatformScope = config.APIPlatformScope
 }

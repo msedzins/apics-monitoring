@@ -14,7 +14,8 @@ func Test_LoadConfiguration(t *testing.T) {
 			idcsHost:                "test3",
 			apiPlatformClientSecret: "test4",
 			apiPlatformUser:         "test5",
-			apiPlatformUserPassword: "test6"},
+			apiPlatformUserPassword: "test6",
+			apiPlatformScope:        "test7"},
 		APIGWConditionMonitor: GatewayConditionMonitor{
 			LastPoolTimeDelay: 360,
 			Gateways:          []int{1, 2, 3},

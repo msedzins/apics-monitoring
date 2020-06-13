@@ -7,6 +7,8 @@
     "APIPlatformUser":"test5",
     "APIPlatformUserPassword":"test6",
 
+    "APIPlatformScope":"test7",
+
     "APIGWConditionMonitor": {
         "LastPoolTimeDelay": 360,
         "Gateways":[1,2,3]
