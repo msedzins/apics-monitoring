@@ -1,4 +1,14 @@
 {
     "APIPlatformClientID": "test1",
-    "APIPlatformHost": "$test2"
+    "APIPlatformHost": "$test2", 
+    
+    "IDCSHost": "test3",
+    "APIPlatformClientSecret":"test4",
+    "APIPlatformUser":"test5",
+    "APIPlatformUserPassword":"test6",
+
+    "APIGWConditionMonitor": {
+        "LastPoolTimeDelay": 360,
+        "Gateways":[1,2,3]
+    }
 }

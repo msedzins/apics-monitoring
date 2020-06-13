@@ -3,33 +3,28 @@ package configuration
 import (
 	"encoding/json"
 	"os"
-	"strings"
 )
 
-// Configuration of the application
+//Configuration of the application
 type Configuration struct {
-	apiPlatformClientID string
-	apiPlatformHost     string
+	CoreConfiguration
+	APIGWConditionMonitor GatewayConditionMonitor
 }
 
-// GetAPIPlatformClientID returns value from configuration file or env. variable.
-func (conf *Configuration) GetAPIPlatformClientID() string {
-	if strings.HasPrefix(conf.apiPlatformClientID, "$") {
-		return os.Getenv(conf.apiPlatformClientID[1:])
-	}
-	return conf.apiPlatformClientID
+//GatewayConditionMonitor monitors condition of the gateways
+type GatewayConditionMonitor struct {
+	LastPoolTimeDelay int
+	Gateways          []int
 }
 
-// GetAPIPlatformHost returns value from configuration file or env. variable.
-func (conf *Configuration) GetAPIPlatformHost() string {
-	if strings.HasPrefix(conf.apiPlatformHost, "$") {
-		return os.Getenv(conf.apiPlatformHost[1:])
-	}
-	return conf.apiPlatformHost
-}
-
-// LoadConfiguration loads configuration from the file
+//LoadConfiguration loads configuration from the file
 func LoadConfiguration(fullPath string) (*Configuration, error) {
+
+	config := Configuration{}
+	err := config.loadConfiguration(fullPath) //here we load "core" configuraton
+	if err != nil {
+		return nil, err
+	}
 
 	file, err := os.Open(fullPath)
 	if err != nil {
@@ -38,23 +33,10 @@ func LoadConfiguration(fullPath string) (*Configuration, error) {
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
-	conf := internalConfiguration{}
-	err = decoder.Decode(&conf)
+	err = decoder.Decode(&config)
 	if err != nil {
 		return nil, err
 	}
 
-	return conf.getConfiguration(), err
-}
-
-type internalConfiguration struct {
-	APIPlatformClientID string
-	APIPlatformHost     string
-}
-
-func (config *internalConfiguration) getConfiguration() *Configuration {
-	return &Configuration{
-		apiPlatformClientID: config.APIPlatformClientID,
-		apiPlatformHost:     config.APIPlatformHost,
-	}
+	return &config, nil
 }
