@@ -2,12 +2,15 @@ package restapi
 
 import (
 	"apics-monitoring/configuration"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 //Authentication gets token from IDCS
 type Authentication struct {
+	Client HTTPClient
 }
 
 // GetToken gets token from IDCS
@@ -21,8 +24,7 @@ func (auth *Authentication) GetToken(conf configuration.Configuration) (string, 
 	req.PostForm.Add("username", conf.GetAPIPlatformUser())
 	req.PostForm.Add("password", conf.GetAPIPlatformUserPassword())
 
-	client := http.Client{}
-	response, err := client.Do(req)
+	response, err := auth.Client.Do(req)
 	if err != nil {
 		return "", err
 	}
@@ -31,5 +33,32 @@ func (auth *Authentication) GetToken(conf configuration.Configuration) (string, 
 	bodyBytes, _ := ioutil.ReadAll(response.Body)
 	bodyString := string(bodyBytes)
 
-	return bodyString, nil
+	token, err := parseResponse(bodyString)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+//NewAuthentication returns initialized Authentication struct
+func NewAuthentication() *Authentication {
+	return &Authentication{Client: &http.Client{}}
+}
+
+func parseResponse(response string) (string, error) {
+
+	type responseJSON struct {
+		AccessToken string `json:"access_token"`
+	}
+
+	decoder := json.NewDecoder(strings.NewReader(response))
+
+	json := &responseJSON{}
+	err := decoder.Decode(json)
+	if err != nil {
+		return "", err
+	}
+
+	return json.AccessToken, nil
 }

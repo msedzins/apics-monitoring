@@ -5,9 +5,6 @@ import (
 	"apics-monitoring/restapi"
 	"flag"
 	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
 	"os"
 )
 
@@ -36,7 +33,7 @@ func main() {
 	}
 
 	//GET AUTH TOKEN
-	auth := restapi.Authentication{}
+	auth := restapi.NewAuthentication()
 	token, err := auth.GetToken(*conf)
 	if err != nil {
 		fmt.Println("Error getting IDCS token.", err)
@@ -45,23 +42,4 @@ func main() {
 
 	fmt.Println("token", token)
 
-}
-
-func testRESTAPI() {
-
-	fmt.Println("1. Performing Http Get...")
-	resp, err := http.Get("http://dummy.restapiexample.com/api/v1/employees")
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	//req, err := http.NewRequest(http.MethodPost, "https://jsonplaceholder.typicode.com/todos/1", nil)
-	//req.SetBasicAuth
-	//client := http.Client{}
-
-	defer resp.Body.Close()
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
-
-	bodyString := string(bodyBytes)
-	fmt.Println("API Response as String:\n" + bodyString)
 }
