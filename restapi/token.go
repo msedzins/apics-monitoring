@@ -2,9 +2,12 @@ package restapi
 
 import (
 	"apics-monitoring/configuration"
+	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -16,17 +19,21 @@ type Authentication struct {
 // GetToken gets token from IDCS
 func (auth *Authentication) GetToken(conf configuration.Configuration) (string, error) {
 
-	req, _ := http.NewRequest(http.MethodPost, conf.GetIDCSHost(), nil)
+	data := url.Values{}
+	data.Add("grant_type", "password")
+	data.Add("scope", conf.GetAPIPlatformScope())
+	data.Add("username", conf.GetAPIPlatformUser())
+	data.Add("password", conf.GetAPIPlatformUserPassword())
+
+	req, _ := http.NewRequest(http.MethodPost, conf.GetIDCSHost()+"/oauth2/v1/token", bytes.NewBufferString(data.Encode()))
 	req.SetBasicAuth(conf.GetAPIPlatformClientID(), conf.GetAPIPlatformClientSecret())
-	req.ParseForm()
-	req.PostForm.Add("grant_type", "password")
-	req.PostForm.Add("scope", conf.GetAPIPlatformScope())
-	req.PostForm.Add("username", conf.GetAPIPlatformUser())
-	req.PostForm.Add("password", conf.GetAPIPlatformUserPassword())
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
 
 	response, err := auth.Client.Do(req)
 	if err != nil {
 		return "", err
+	} else if response.StatusCode != 200 {
+		return "", errors.New(response.Status)
 	}
 	defer response.Body.Close()
 
