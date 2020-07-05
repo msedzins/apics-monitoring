@@ -2,9 +2,11 @@ package main
 
 import (
 	"apics-monitoring/configuration"
-	"apics-monitoring/restapi"
+	"apics-monitoring/modules"
+	"apics-monitoring/modules/validatepolltime"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -22,24 +24,35 @@ func handleInputParams() string {
 	return *config
 }
 
+//list of all supported modules to be run sequentially. Currently there is only one.
+var listOfModules []modules.Module = []modules.Module{&validatepolltime.ValidatePollTime{}}
+
 func main() {
 
 	//LOAD CONFIGURATION
 	configFile := handleInputParams()
 	conf, err := configuration.LoadConfiguration(configFile)
 	if err != nil {
-		fmt.Println("Error loading configuration.", err)
-		os.Exit(1)
+		log.Fatalln("Error loading configuration.", err)
 	}
 
 	//GET AUTH TOKEN
-	auth := restapi.NewAuthentication()
-	token, err := auth.GetToken(*conf)
+	//TODO: Change it!
+	//auth := restapi.NewAuthentication()
+	token, err := "TOKEN", nil //auth.GetToken(*conf)
 	if err != nil {
-		fmt.Println("Error getting IDCS token.", err)
-		os.Exit(1)
+		log.Fatalln("Error getting IDCS token.", err)
 	}
 
-	fmt.Println("token", token)
+	//EXECUTE ALL MODULES
+	for _, item := range listOfModules {
+		fmt.Println("Calling module:,", item.GetName())
+		alerts, err := item.Execute(token, *conf)
+		if err != nil {
+			log.Fatalln("Error calling the module.", err)
+		}
+
+		fmt.Printf("output:%+v", alerts)
+	}
 
 }

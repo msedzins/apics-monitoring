@@ -13,7 +13,7 @@ import (
 
 //Authentication gets token from IDCS
 type Authentication struct {
-	Client HTTPClient
+	client HTTPClient
 }
 
 // GetToken gets token from IDCS
@@ -29,11 +29,11 @@ func (auth *Authentication) GetToken(conf configuration.Configuration) (string, 
 	req.SetBasicAuth(conf.GetAPIPlatformClientID(), conf.GetAPIPlatformClientSecret())
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
 
-	response, err := auth.Client.Do(req)
+	response, err := auth.client.Do(req)
 	if err != nil {
 		return "", err
 	} else if response.StatusCode != 200 {
-		return "", errors.New(response.Status)
+		return "", errors.New("Bad response status " + response.Status)
 	}
 	defer response.Body.Close()
 
@@ -50,7 +50,7 @@ func (auth *Authentication) GetToken(conf configuration.Configuration) (string, 
 
 //NewAuthentication returns initialized Authentication struct
 func NewAuthentication() *Authentication {
-	return &Authentication{Client: &http.Client{}}
+	return &Authentication{client: &http.Client{}}
 }
 
 func parseResponse(response string) (string, error) {
