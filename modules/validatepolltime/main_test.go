@@ -4,12 +4,52 @@ import (
 	"apics-monitoring/modules"
 	"apics-monitoring/restapi"
 	"fmt"
+	"reflect"
 	"testing"
 	"time"
 )
 
 func Test_validateNodes(t *testing.T) {
-	//TODO
+	//given
+	tests := []struct {
+		nodes           []restapi.Node
+		delay           int
+		expectedOutcome []modules.Alert
+		expectedError   error
+	}{
+		{
+			nodes:           nil,
+			delay:           1,
+			expectedOutcome: make([]modules.Alert, 0),
+			expectedError:   nil,
+		},
+		{
+			nodes:           []restapi.Node{{ContactedAt: "2006-01-02T15:04:05+0000"}},
+			delay:           1,
+			expectedOutcome: []modules.Alert{{Message: "Gateway last polling time:2006-01-02T15:04:05+0000 breached the threshold:1 seconds"}},
+			expectedError:   nil,
+		},
+		{
+			nodes:           []restapi.Node{{ContactedAt: "2006-01-02T15:04:05+0000"}, {ContactedAt: "2006-01-02T15:04:05+0000"}},
+			delay:           1,
+			expectedOutcome: []modules.Alert{{Message: "Gateway last polling time:2006-01-02T15:04:05+0000 breached the threshold:1 seconds"}, {Message: "Gateway last polling time:2006-01-02T15:04:05+0000 breached the threshold:1 seconds"}},
+			expectedError:   nil,
+		},
+	}
+	mod := ValidatePollTime{}
+	//when
+	for _, test := range tests {
+		alerts, err := mod.validateNodes(test.nodes, test.delay)
+
+		//then
+		if !reflect.DeepEqual(alerts, test.expectedOutcome) {
+			t.Errorf("Not expected outcome: %v, %v", test.expectedOutcome, alerts)
+		}
+
+		if test.expectedError != err {
+			t.Errorf("Not expected outcome: %+v, %+v", test.expectedError, err)
+		}
+	}
 }
 
 func Test_validateNode(t *testing.T) {
@@ -24,7 +64,7 @@ func Test_validateNode(t *testing.T) {
 		delay:           120,
 		expectedOutcome: modules.Alert{Message: "Gateway last polling time:2020-06-17T20:16:18+0000 breached the threshold:120 seconds"},
 	}, {
-		nodeData:        restapi.Node{ContactedAt: timeNow}, //-2 hours because time.Now gets time in UTC, dateLayout will move it to UTC+2
+		nodeData:        restapi.Node{ContactedAt: timeNow},
 		delay:           120,
 		expectedOutcome: modules.Alert{},
 	}, {

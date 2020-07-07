@@ -60,14 +60,10 @@ func (*ValidatePollTime) validateNode(node restapi.Node, delay int) (modules.Ale
 	}
 	pollTime = pollTime.Add(time.Second * time.Duration(delay))
 	today := time.Now()
-	//fmt.Printf(today.Zone())
-	//fmt.Printf(pollTime.Zone())
 
 	if pollTime.Before(today) {
 		alert = modules.Alert{Message: fmt.Sprintf(alertMessage, node.ContactedAt, delay)}
 	}
-
-	//fmt.Printf("%v, %v test", today.Unix(), pollTime.Unix())
 
 	return alert, nil
 }
