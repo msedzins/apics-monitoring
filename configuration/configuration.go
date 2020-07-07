@@ -9,12 +9,18 @@ import (
 type Configuration struct {
 	CoreConfiguration
 	APIGWConditionMonitor GatewayConditionMonitor
+	APIGWAlerts           Alerts
 }
 
 //GatewayConditionMonitor monitors condition of the gateways
 type GatewayConditionMonitor struct {
 	LastPoolTimeDelay int
 	Gateways          []int
+}
+
+//Alerts contains details of Notification service
+type Alerts struct {
+	TopicID string
 }
 
 //LoadConfiguration loads configuration from the file

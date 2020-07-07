@@ -1,15 +1,30 @@
 package alerts
 
 import (
+	"context"
+
 	"github.com/oracle/oci-go-sdk/common"
-	"github.com/oracle/oci-go-sdk/identity" // Identity or any other service you wish to make requests to
+	"github.com/oracle/oci-go-sdk/ons"
 )
 
-func test() {
+//Send publish the message to the topic
+func Send(topicID string, body string) error {
 
 	config := common.DefaultConfigProvider()
-	_, err := identity.NewIdentityClientWithConfigurationProvider(config)
+	client, err := ons.NewNotificationDataPlaneClientWithConfigurationProvider(config)
 	if err != nil {
-		panic(err)
+		return err
 	}
+
+	message := ons.PublishMessageRequest{
+		TopicId:        &topicID,
+		MessageDetails: ons.MessageDetails{Body: &body},
+	}
+
+	_, err = client.PublishMessage(context.TODO(), message)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

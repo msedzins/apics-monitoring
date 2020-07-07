@@ -1,9 +1,11 @@
 package main
 
 import (
+	"apics-monitoring/alerts"
 	"apics-monitoring/configuration"
 	"apics-monitoring/modules"
 	"apics-monitoring/modules/validatepolltime"
+	"apics-monitoring/restapi"
 	"flag"
 	"fmt"
 	"log"
@@ -37,22 +39,31 @@ func main() {
 	}
 
 	//GET AUTH TOKEN
-	//TODO: Change it!
-	//auth := restapi.NewAuthentication()
-	token, err := "TOKEN", nil //auth.GetToken(*conf)
+	auth := restapi.NewAuthentication()
+	token, err := auth.GetToken(*conf)
 	if err != nil {
 		log.Fatalln("Error getting IDCS token.", err)
 	}
 
 	//EXECUTE ALL MODULES
+	var alertsToSend []modules.Alert
 	for _, item := range listOfModules {
 		fmt.Println("Calling module:,", item.GetName())
-		alerts, err := item.Execute(token, *conf)
+		alertsToSend, err = item.Execute(token, *conf)
 		if err != nil {
 			log.Fatalln("Error calling the module.", err)
 		}
-
-		fmt.Printf("output:%+v", alerts)
 	}
+
+	//SEND ALERTS
+	if len(alertsToSend) > 0 {
+
+		err := alerts.Send(conf.APIGWAlerts.TopicID, fmt.Sprintf("%+v", alertsToSend))
+		if err != nil {
+			log.Fatalln("Error calling alerts.Send.", err)
+		}
+	}
+
+	fmt.Println("Execution completed with success.")
 
 }

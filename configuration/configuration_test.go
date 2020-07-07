@@ -20,6 +20,9 @@ func Test_LoadConfiguration(t *testing.T) {
 			LastPoolTimeDelay: 360,
 			Gateways:          []int{1, 2, 3},
 		},
+		APIGWAlerts: Alerts{
+			TopicID: "test",
+		},
 	}
 
 	//when
@@ -30,7 +33,8 @@ func Test_LoadConfiguration(t *testing.T) {
 
 	//then
 	if !reflect.DeepEqual(configFromFile.APIGWConditionMonitor, expectedConfig.APIGWConditionMonitor) ||
-		!reflect.DeepEqual(configFromFile.CoreConfiguration, expectedConfig.CoreConfiguration) {
+		!reflect.DeepEqual(configFromFile.CoreConfiguration, expectedConfig.CoreConfiguration) ||
+		!reflect.DeepEqual(configFromFile.APIGWAlerts, expectedConfig.APIGWAlerts) {
 		t.Errorf("configFromFile!=expectedConfig. %+v, %+v", configFromFile, expectedConfig)
 	}
 }

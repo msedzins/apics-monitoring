@@ -12,5 +12,8 @@
     "APIGWConditionMonitor": {
         "LastPoolTimeDelay": 360,
         "Gateways":[1,2,3]
+    },
+    "APIGWAlerts": {
+        "TopicID": "test"
     }
 }
