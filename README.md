@@ -31,7 +31,12 @@ Please note that monitoring part of the solution can be deployed free of cost fo
 1. Install and configure [CLI](https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/cliconcepts.htm)
 2. Download [SDK for GO](https://docs.cloud.oracle.com/en-us/iaas/Content/API/SDKDocs/gosdk.htm)
 3. Configure Notification Service:
-    1. Create Topic. This can be done in the OCI Console or using CLI: `oci ons topic create --name <name of topic> --compartment-id <id of compartment>`
-    2. Create Subscritpion. This can be done in the OCI Console or using CLI: `oci ons subscription create --topic-id <id of created topic> --compartment-id <id of compartment> --protocol email --subscription-endpoint <address to which email is going to be sent>`
+    1. Create Topic. This can be done in the OCI Console or using CLI: 
+
+    ```oci ons topic create --name <name of topic> --compartment-id <id of compartment>```
+
+    2. Create Subscritpion. This can be done in the OCI Console or using CLI: 
+    
+    ```oci ons subscription create --topic-id <id of created topic> --compartment-id <id of compartment> --protocol email --subscription-endpoint <address to which email is going to be sent>```
     
  
