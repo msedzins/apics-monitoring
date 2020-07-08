@@ -13,6 +13,7 @@ This repo showcases one of the approaches, based on the REST APIs exposed by the
 
 ## Architecture
 
+![Architecture](./img/architecture.png)
 
 
 ## Deployment Architecture
