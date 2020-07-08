@@ -39,4 +39,9 @@ Please note that monitoring part of the solution can be deployed free of cost fo
     
     ```oci ons subscription create --topic-id <id of created topic> --compartment-id <id of compartment> --protocol email --subscription-endpoint <address to which email is going to be sent>```
     
+### App installation
+
+1. Clone the repository/download the code
+2. Create configuration file based on the template stored in `configuration/configuration_test.json`. All configuration parametes have to be specified.
+3. Compile and run application: `go run apics_monitoring.go -cf <configuration file>`
  
