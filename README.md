@@ -13,6 +13,8 @@ This repo showcases one of the approaches, based on the REST APIs exposed by the
 
 ## Architecture
 
+
+
 ## Deployment Architecture
 
 ## Installation
