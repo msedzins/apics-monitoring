@@ -18,4 +18,6 @@ This repo showcases one of the approaches, based on the REST APIs exposed by the
 
 ## Deployment Architecture
 
+![Architecture](./img/deployment_architecture.png)
+
 ## Installation
