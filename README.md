@@ -20,4 +20,8 @@ This repo showcases one of the approaches, based on the REST APIs exposed by the
 
 ![Architecture](./img/deployment_architecture.png)
 
+Please note that monitoring part of the solution can be deployed free of cost for many use cases:
+1. Compute Node - Oracle Free Tier can be used
+2. Notification Service - first 1000 emails per month free. See this [link](https://www.oracle.com/cloud/systems-management/notifications/pricing.html) for details.
+
 ## Installation
