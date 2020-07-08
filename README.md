@@ -43,5 +43,5 @@ Please note that monitoring part of the solution can be deployed free of cost fo
 
 1. Clone the repository/download the code
 2. Create configuration file based on the template stored in `configuration/configuration_test.json`. All configuration parametes have to be specified.
-3. Compile and run application: `go run apics_monitoring.go -cf <configuration file>`
+3. Compile and run application: `./apics_monitoring.go -cf <configuration file>`
  
