@@ -6,9 +6,9 @@ OCI Cloud Native services come with seemingly integrated Monitoring service. But
 
 This repo showcases one of the approaches, based on the REST APIs exposed by the API Platform service. It's by no means the complete solution, just a demo to get a feel of a concept.
 
-## Features
+## Functionality
 
-1. Checking the last polling time for the list of configured gateways
+1. Application checks the last polling time for the list of configured gateways
 2. If defined threshold is not met for any of them - email notification is sent to defined receipients
 
 ## Architecture
