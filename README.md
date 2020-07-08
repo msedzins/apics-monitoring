@@ -8,6 +8,9 @@ This repo showcases one of the approaches, based on the REST APIs exposed by the
 
 ## Features
 
+1. Checking the last polling time for the list of configured gateways
+2. If defined threshold is not met for any of them - email notification is sent to defined receipients
+
 ## Architecture
 
 ## Deployment Architecture
